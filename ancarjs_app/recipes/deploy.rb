@@ -40,7 +40,7 @@ node[:deploy].each do |application, deploy|
   Chef::Log.info("package.json detected. Running npm #{cmd}.")
   Chef::Log.info(OpsWorks::ShellOut.shellout("#{cmd} 2>&1"))
   
-  cmd = "sudo su - #{app_config[:user]} -c 'cd #{current_dir} && npm install && bower install && gulp build'"
+  cmd = "sudo su - #{node[:opsworks][:deploy_user][:user]} -c 'cd #{current_dir} && npm install && bower install && gulp build'"
   Chef::Log.info("package.json detected. Running npm #{cmd}.")
   Chef::Log.info(OpsWorks::ShellOut.shellout("#{cmd} 2>&1"))
   
