@@ -34,7 +34,17 @@ node[:deploy].each do |application, deploy|
     app application
   end
 
-#  current_dir = ::File.join(deploy[:deploy_to], 'current')
+  current_dir = ::File.join(deploy[:deploy_to], 'current')
+
+  cmd = "npm install -g bower gulp"
+  Chef::Log.info("package.json detected. Running npm #{cmd}.")
+  Chef::Log.info(OpsWorks::ShellOut.shellout("#{cmd} 2>&1"))
+  
+  cmd = "sudo su - #{app_config[:user]} -c 'cd #{current_dir} && npm install && bower install && gulp build'"
+  Chef::Log.info("package.json detected. Running npm #{cmd}.")
+  Chef::Log.info(OpsWorks::ShellOut.shellout("#{cmd} 2>&1"))
+  
+  
 #  webapp_dir = ::File.join(node['tomcat']['webapps_base_dir'], deploy[:document_root].blank? ? application : deploy[:document_root])
 
   # opsworks_deploy creates some stub dirs, which are not needed for typical webapps
