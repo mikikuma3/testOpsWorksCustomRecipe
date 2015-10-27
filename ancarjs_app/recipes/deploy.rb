@@ -18,7 +18,7 @@ Chef::Log.info("ancarjs_app::deploy start. JSON is #{node[:deploy]}")
 node[:deploy].each do |application, deploy|
 
   # SKIP not target apps
-  if deploy[:application] != 'ancarJS'
+  if deploy[:application] != 'ancarjs'
     Chef::Log.info("Skipping ancarjs_app::deploy. #{application} as it is not a ancarJS app")
     next
   end
