@@ -1,6 +1,15 @@
-include_recipe 'deploy'
+###
+# ancarJSをOpsWorks上にデプロイする為のレシピです。
+# ・opsworks上でapp(name=ancarJS)が作成されている必要があります。
+# ・opsworks上のデプロイ対象layerのcustombookのdeployセクションに本ファイルを指定します
+#
+# 処理の流れ
+# ・opsworksのappの流儀に従って、デプロイ先のフォルダを作成し、ソースコードをチェックアウトします
+# ・AngularJSをビルドします
+# 
+###
 
-Chef::Log.info("ancarjs_app::deploy start. JSON is #{node[:deploy]}")
+include_recipe 'deploy'
 
 node[:deploy].each do |application, deploy|
 
@@ -10,13 +19,14 @@ node[:deploy].each do |application, deploy|
     next
   end
   
-  Chef::Log.info("Start ancarjs_app::deploy.")
+  # opsworks default deploy operation. make dir ...etc
   opsworks_deploy_dir do
     user deploy[:user]
     group deploy[:group]
     path deploy[:deploy_to]
   end
-
+  
+  # opsworks default deploy operation. checkout source code ...etc
   opsworks_deploy do
     deploy_data deploy
     app application
@@ -24,6 +34,7 @@ node[:deploy].each do |application, deploy|
 
   current_dir = ::File.join(deploy[:deploy_to], 'current')
 
+  # build ancarjs. run npm install ...etc
   ruby_block "build ancarjs_app" do
     block do
       cmd = "npm install -g bower gulp"
@@ -36,8 +47,4 @@ node[:deploy].each do |application, deploy|
     end
   end
   
-  Chef::Log.info("End loop ancarjs_app::deploy.")
 end
-
-Chef::Log.info("End ancarjs_app::deploy.")
-
