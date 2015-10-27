@@ -25,13 +25,15 @@ node[:deploy].each do |application, deploy|
   current_dir = ::File.join(deploy[:deploy_to], 'current')
 
   ruby_block "build ancarjs_app" do
-    cmd = "npm install -g bower gulp"
-    Chef::Log.info("package.json detected. Running npm #{cmd}.")
-    Chef::Log.info(OpsWorks::ShellOut.shellout("#{cmd} 2>&1"))
-    
-    cmd = "sudo su - #{deploy[:user]} -c 'cd #{current_dir} && npm install && bower install && gulp build'"
-    Chef::Log.info("package.json detected. Running npm #{cmd}.")
-    Chef::Log.info(OpsWorks::ShellOut.shellout("#{cmd} 2>&1"))
+    block do
+      cmd = "npm install -g bower gulp"
+      Chef::Log.info("package.json detected. Running npm #{cmd}.")
+      Chef::Log.info(OpsWorks::ShellOut.shellout("#{cmd} 2>&1"))
+      
+      cmd = "sudo su - #{deploy[:user]} -c 'cd #{current_dir} && npm install && bower install && gulp build'"
+      Chef::Log.info("package.json detected. Running npm #{cmd}.")
+      Chef::Log.info(OpsWorks::ShellOut.shellout("#{cmd} 2>&1"))
+    end
   end
   
   Chef::Log.info("End loop ancarjs_app::deploy.")
