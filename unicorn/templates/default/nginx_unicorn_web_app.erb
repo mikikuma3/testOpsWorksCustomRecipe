@@ -22,7 +22,7 @@ server {
 
   location / {
     root /srv/www/ancarjs/current/dist/;
-    try_files $uri $uri/index.html $uri/index.htm;
+    try_files $uri $uri/ /index.html;
   }
 
   location /api/ {
